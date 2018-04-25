@@ -1,0 +1,112 @@
+********gradle-wrapper.properties
+//----------------------------------- changed to 4.1
+distributionUrl=https\://services.gradle.org/distributions/gradle-4.1-all.zip
+
+
+********root build.gradle
+//----------------------------------- added google() in buildscript repositories
+//----------------------------------- added google() in allprojects repositories
+//----------------------------------- changed to gradle:3.0.0
+//----------------------------------- added ext {}, copied from react-native-maps
+
+buildscript {
+    repositories {
+        google()
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:3.0.0'
+
+        // NOTE: Do not place your application dependencies here; they belong
+        // in the individual module build.gradle files
+    }
+}
+
+allprojects {
+    repositories {
+        mavenLocal()
+        google()
+        jcenter()
+        maven {
+            // All of React Native (JS, Obj-C sources, Android binaries) is installed from npm
+            url "$rootDir/../node_modules/react-native/android"
+        }
+    }
+}
+
+ext {
+    compileSdkVersion   = 26
+    targetSdkVersion    = 26
+    buildToolsVersion   = "26.0.2"
+    supportLibVersion   = "26.1.0"
+    googlePlayServicesVersion = "11.8.0"
+    androidMapsUtilsVersion = "0.5+"
+}
+
+
+*********android/app/build.gradle
+
+android {
+    //------------------------------ changed to Sdk 26 and buildTools 26.0.2
+    compileSdkVersion 26
+    buildToolsVersion "26.0.2"
+}
+
+    dependencies {
+    //------------------------------------------------------------------- changed line below from compile to implementation
+    implementation fileTree(dir: "libs", include: ["*.jar"])
+    //--------------------------------------------------------------------- changed line below from compile to api
+    api "com.android.support:appcompat-v7:26.0.2"
+    //------------------------------------------------------------------- changed line below from compile to implementation    
+    implementation "com.facebook.react:react-native:+"  // From node_modules
+    //------------------------------------------------------------------- inserted line below pasted from react-native-maps      
+    implementation project(':react-native-maps')
+    }
+
+
+*********settings.gradle
+
+//------------------------------------------------------------------- inserted lines below pasted from react-native-maps      
+include ':react-native-maps'
+project(':react-native-maps').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-maps/lib/android')
+
+**********AndroidManifest.xml
+
+//------------------------------------------------------------------- inserted lines below pasted from react-native-maps, and inserted api key.     
+<meta-data
+      android:name="com.google.android.geo.API_KEY"
+      android:value="AIzaSyBIbGco4DrHjiI9A4HKuw-KWBxWQEuzssc"/>
+
+
+***********MainApplication.java
+
+
+import com.facebook.react.ReactApplication;
+import com.facebook.react.ReactNativeHost;
+import com.facebook.react.ReactPackage;
+import com.facebook.react.shell.MainReactPackage;
+import com.facebook.soloader.SoLoader;
+//------------------------------------------------------------------- inserted line below pasted from react-native-maps  
+import com.airbnb.android.react.maps.MapsPackage;
+
+//------------------------------------------------------------------- inserted new MapsPackage() below pasted from react-native-maps  
+    @Override
+    protected List<ReactPackage> getPackages() {
+      return Arrays.<ReactPackage>asList(
+          new MainReactPackage(),
+          new MapsPackage()
+      );
+    }
+
+
+
+
+// --------------------------------------------------------------------------------------------------------------------------------
+
+All above was necessary to compile app without crash.
+
+// --------------------------------------------------------------------------------------------------------------------------------
+AndroidManifest.xml
+Added below to try and get user location.
+
+<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />

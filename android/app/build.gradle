@@ -94,8 +94,9 @@ def enableSeparateBuildPerCPUArchitecture = false
 def enableProguardInReleaseBuilds = false
 
 android {
-    compileSdkVersion 23
-    buildToolsVersion "23.0.1"
+    //------------------------------ changed to Sdk 26 and buildTools 26.0.2
+    compileSdkVersion 26
+    buildToolsVersion "26.0.2"
 
     defaultConfig {
         applicationId "com.androidnike"
@@ -137,11 +138,14 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: "libs", include: ["*.jar"])
-    compile "com.android.support:appcompat-v7:23.0.1"
-    compile "com.facebook.react:react-native:+"  // From node_modules
+    //------------------------------------------------------------------- changed line below from compile to implementation
+    implementation fileTree(dir: "libs", include: ["*.jar"])
+    //--------------------------------------------------------------------- changed line below from compile to api
+    api "com.android.support:appcompat-v7:26.0.2"
+    //------------------------------------------------------------------- changed line below from compile to implementation    
+    implementation "com.facebook.react:react-native:+"  // From node_modules
 
-    compile project(':react-native-maps')
+    implementation project(':react-native-maps')
     // implementation(project(':react-native-maps')){
     //     exclude group: 'com.google.android.gms', module: 'play-services-base'
     //     exclude group: 'com.google.android.gms', module: 'play-services-maps'
